@@ -4,6 +4,18 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 
+function getBalance(statement) {
+  const balance = statement.reduce((acc, operation) => {
+    if (operation.type === "credit") {
+      return acc + operation.amount;
+    } else {
+      return acc - operation.amount;
+    }
+  }, 0);
+
+  return balance;
+}
+
 const customers = [];
 
 function verifyIfAccountExistsByCPF (req, res, next) {
@@ -65,6 +77,28 @@ app.post('/deposit', verifyIfAccountExistsByCPF, (req, res) => {
   };
 
   customer.statement.push(newDeposit);
+
+  return res.status(201).send();
+});
+
+// create a withdraw by customer 
+app.post('/withdraw', verifyIfAccountExistsByCPF, (req, res) => {
+  const { amount } = req.body;
+  const { customer } = req;
+
+  const balance = getBalance(customer.statement);
+
+  if (balance < amount) {
+    return res.status(400).json({ error: "Insufficent founds!" });
+  }
+
+  const newWithdraw = {
+    amount,
+    created_at: new Date(),
+    type: 'debit',
+  };
+
+  customer.statement.push(newWithdraw);
 
   return res.status(201).send();
 });
