@@ -103,4 +103,20 @@ app.post('/withdraw', verifyIfAccountExistsByCPF, (req, res) => {
   return res.status(201).send();
 });
 
+// check statements by date
+app.get('/statement/date', verifyIfAccountExistsByCPF, (req, res) => {
+  const { customer } = req;
+  const { date } = req.query;
+
+  const dateFormat = new Date(date + " 00:00");
+
+  const checkStatementByDate = customer.statement.filter((operation) => {
+    operation.created_at.toDateString() === dateFormat.toDateString();
+  })
+
+  console.log(checkStatementByDate);
+
+  return res.status(201).json(customer.statement);
+});
+
 app.listen(3000);
