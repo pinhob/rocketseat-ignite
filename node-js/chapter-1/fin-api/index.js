@@ -110,13 +110,10 @@ app.get('/statement/date', verifyIfAccountExistsByCPF, (req, res) => {
 
   const dateFormat = new Date(date + " 00:00");
 
-  const checkStatementByDate = customer.statement.filter((operation) => {
-    operation.created_at.toDateString() === dateFormat.toDateString();
-  })
-
+  const checkStatementByDate = customer.statement.filter((operation) => operation.created_at.toDateString() === dateFormat.toDateString());
   console.log(checkStatementByDate);
 
-  return res.status(201).json(customer.statement);
+  return res.status(201).json(checkStatementByDate);
 });
 
 app.listen(3000);
