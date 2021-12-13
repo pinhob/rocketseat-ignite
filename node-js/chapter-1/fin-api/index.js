@@ -7,7 +7,8 @@ const customers = [];
 
 app.use(express.json());
 
-app.post('/customer', (req, res) => {
+// create and validate account
+app.post('/account', (req, res) => {
   const { cpf, name } = req.body;
 
   const customerAlreadyExists = customers.some((customer) => customer.cpf === cpf);
@@ -27,6 +28,15 @@ app.post('/customer', (req, res) => {
 
   return res.status(201).send();
 
+});
+
+// get statement by customer cpf
+app.get('/statement/:cpf', (req, res) => {
+  const { cpf } = req.params;
+
+  const customer = customers.find((customer) => customer.cpf === cpf);
+
+  return res.json(customer.statement);
 });
 
 app.listen(3000);
