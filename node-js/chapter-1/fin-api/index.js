@@ -1,4 +1,4 @@
-const { request } = require('express');
+const { request, json } = require('express');
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 
@@ -114,6 +114,23 @@ app.get('/statement/date', verifyIfAccountExistsByCPF, (req, res) => {
   console.log(checkStatementByDate);
 
   return res.status(201).json(checkStatementByDate);
+});
+
+// update user account name
+app.put('/account', verifyIfAccountExistsByCPF, (req, res) => {
+  const { name } = req.body;
+  const { customer } = req;
+
+  customer.name = name;
+
+  return res.status(201).send();
+});
+
+// get user account infos by cpf
+app.get('/account', verifyIfAccountExistsByCPF, (req, res) => {
+  const { customer } = req;
+
+  return res.status(201).json(customer);
 });
 
 app.listen(3000);
