@@ -133,4 +133,13 @@ app.get('/account', verifyIfAccountExistsByCPF, (req, res) => {
   return res.status(201).json(customer);
 });
 
+// delete user account by cpf
+app.delete('/account', verifyIfAccountExistsByCPF, (req, res) => {
+  const { costumer } = req;
+
+  customers.splice(costumer, 1);
+
+  return res.status(200).json(customers);
+});
+
 app.listen(3000);
