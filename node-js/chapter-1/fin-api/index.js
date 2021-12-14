@@ -142,4 +142,13 @@ app.delete('/account', verifyIfAccountExistsByCPF, (req, res) => {
   return res.status(200).json(customers);
 });
 
+// get user balance by cpf
+app.get('/balance', verifyIfAccountExistsByCPF, (req, res) => {
+  const { customer } = req;
+
+  const balance = getBalance(customer.statement);
+
+  return res.status(200).json(balance);
+})
+
 app.listen(3000);
